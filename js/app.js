@@ -172,6 +172,9 @@
 
     document.getElementById('btn-generate-shift').addEventListener('click', (e) => doGenerateShifts(e.currentTarget));
     document.getElementById('btn-regenerate-shift').addEventListener('click', (e) => doGenerateShifts(e.currentTarget));
+    document.getElementById('btn-print-pdf').addEventListener('click', () => {
+      window.print();
+    });
     
     document.getElementById('btn-clear-shift').addEventListener('click', () => {
       if (confirm('この月のシフトをすべてクリアしますか？')) {

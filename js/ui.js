@@ -181,6 +181,11 @@
       return;
     }
     
+    const shortageList = document.getElementById('shortage-list');
+    const shortageContainer = document.getElementById('shortage-report-container');
+    if (shortageList) shortageList.innerHTML = '';
+    let totalShortages = 0;
+    
     const daysInMonth = new Date(year, month, 0).getDate();
     const table = document.createElement('table');
     table.className = 'shift-table';
@@ -299,20 +304,52 @@
       tdReqLabel.textContent = '配置 / 必要';
       trReq.appendChild(tdReqLabel);
       
+      let currentShortageStart = null;
+      let maxShortage = 0;
+
+      const recordShortage = (endSlot) => {
+        if (currentShortageStart !== null) {
+          if (shortageList) {
+            const li = document.createElement('li');
+            li.style.marginBottom = '4px';
+            li.innerHTML = `<strong>${month}月${day}日 (${dayOfWeek})</strong>: ${formatTime(currentShortageStart)} 〜 ${formatTime(endSlot)} <span style="color: var(--danger); font-weight: 600;">(${maxShortage}名不足)</span>`;
+            shortageList.appendChild(li);
+            totalShortages++;
+          }
+          currentShortageStart = null;
+          maxShortage = 0;
+        }
+      };
+
       for (let s = 0; s < TOTAL_SLOTS; s++) {
         const td = document.createElement('td');
         td.textContent = `${actualStaff[s]}/${reqs[s]}`;
-        if (actualStaff[s] < reqs[s]) {
+        const diff = reqs[s] - actualStaff[s];
+        
+        if (diff > 0) {
           td.classList.add('req-warning');
-          td.title = `要員不足: ${reqs[s] - actualStaff[s]}人足りません`;
+          td.title = `要員不足: ${diff}人足りません`;
+          if (currentShortageStart === null) currentShortageStart = s;
+          maxShortage = Math.max(maxShortage, diff);
+        } else {
+          recordShortage(s);
         }
         trReq.appendChild(td);
       }
+      recordShortage(TOTAL_SLOTS);
       tbody.appendChild(trReq);
     }
     
     table.appendChild(tbody);
     container.appendChild(table);
+    
+    if (shortageContainer) {
+      if (totalShortages > 0) {
+        shortageContainer.style.display = 'block';
+      } else {
+        shortageContainer.style.display = 'none';
+      }
+    }
   }
 
   // Expose globally

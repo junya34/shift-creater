@@ -652,3 +652,64 @@ select:focus, input[type="text"]:focus {
   gap: 12px;
   margin-top: 32px;
 }
+
+/* Print / PDF Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .sidebar, .tabs, .actions, .btn, .icon-btn {
+    display: none !important;
+  }
+  
+  .app-container {
+    height: auto;
+    display: block;
+  }
+  
+  .main-content {
+    padding: 0;
+    overflow: visible;
+  }
+  
+  .glass {
+    box-shadow: none;
+    border: none;
+    background: white;
+  }
+  
+  .shift-table-wrapper {
+    overflow: visible;
+    border: none;
+  }
+  
+  .shift-table th, .shift-table td {
+    border: 1px solid #ddd;
+    color: black !important;
+  }
+  
+  /* Force background colors to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .shift-table th:first-child, .shift-table td:first-child {
+    background: white;
+    color: black;
+  }
+  
+  .shortage-report {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #ef4444 !important;
+    background: #fef2f2 !important;
+  }
+  
+  .req-warning {
+    background-color: #fee2e2 !important;
+    color: #ef4444 !important;
+  }
+}
