@@ -537,10 +537,9 @@ select:focus, input[type="text"]:focus {
 
 .shift-table th, .shift-table td {
   border: 1px solid var(--border-color);
-  padding: 8px;
+  padding: 4px 6px;
   text-align: center;
   font-size: 0.75rem;
-  height: 40px;
 }
 
 .shift-table th {
@@ -561,6 +560,16 @@ select:focus, input[type="text"]:focus {
   text-align: left;
   font-weight: 500;
   color: var(--text-main);
+}
+
+.shift-info-col {
+  position: sticky;
+  right: 0;
+  background: var(--bg-surface);
+  z-index: 20;
+  min-width: 100px;
+  white-space: nowrap;
+  border-left: 2px solid var(--border-color) !important;
 }
 
 .shift-cell {
@@ -680,14 +689,38 @@ select:focus, input[type="text"]:focus {
     background: white;
   }
   
+  @page {
+    size: landscape;
+    margin: 10mm;
+  }
+
   .shift-table-wrapper {
     overflow: visible;
     border: none;
+    width: 100%;
+  }
+  
+  .shift-table {
+    min-width: 0 !important;
+    width: 100% !important;
   }
   
   .shift-table th, .shift-table td {
     border: 1px solid #ddd;
     color: black !important;
+    padding: 4px 2px !important;
+    font-size: 0.6rem !important;
+    height: auto !important;
+  }
+
+  .shift-table th:first-child, .shift-table td:first-child {
+    min-width: 90px !important;
+  }
+  
+  .shift-info-col {
+    min-width: 60px !important;
+    position: static !important;
+    font-size: 0.55rem !important;
   }
   
   /* Force background colors to print */

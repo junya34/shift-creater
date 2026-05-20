@@ -193,7 +193,7 @@
     // Header
     const thead = document.createElement('thead');
     const trHead = document.createElement('tr');
-    trHead.innerHTML = '<th>スタッフ / 時間</th>';
+    trHead.innerHTML = '<th>スタッフ</th>';
     for (let s = 0; s < TOTAL_SLOTS; s++) {
       // Only show hourly labels
       const th = document.createElement('th');
@@ -205,6 +205,10 @@
       }
       trHead.appendChild(th);
     }
+    const thEnd = document.createElement('th');
+    thEnd.textContent = '勤務時間';
+    thEnd.className = 'shift-info-col';
+    trHead.appendChild(thEnd);
     thead.appendChild(trHead);
     table.appendChild(thead);
     
@@ -219,7 +223,7 @@
       // Day Header Row
       const trDay = document.createElement('tr');
       const tdDay = document.createElement('td');
-      tdDay.colSpan = TOTAL_SLOTS + 1;
+      tdDay.colSpan = TOTAL_SLOTS + 2;
       tdDay.textContent = `${month}月${day}日 (${dayOfWeek})`;
       tdDay.style.background = 'rgba(99, 102, 241, 0.1)';
       tdDay.style.color = 'var(--primary)';
@@ -256,18 +260,11 @@
         const actualWorkMins = (workSlots - breakSlots) * 15;
         const breakMins = breakSlots * 15;
         
-        const infoDiv = document.createElement('div');
-        infoDiv.style.fontSize = '0.65rem';
-        infoDiv.style.color = 'var(--text-muted)';
-        infoDiv.style.marginTop = '4px';
-        
-        let infoText = `勤務: ${Math.floor(actualWorkMins / 60)}h${(actualWorkMins % 60) > 0 ? (actualWorkMins % 60) + 'm' : ''}`;
+        let infoText = `${Math.floor(actualWorkMins / 60)}h${(actualWorkMins % 60) > 0 ? (actualWorkMins % 60) + 'm' : ''}`;
         if (breakMins > 0) {
-          infoText += ` / 休憩: ${breakMins}m`;
+          infoText += ` (休${breakMins}m)`;
         }
-        infoDiv.textContent = infoText;
         
-        tdName.appendChild(infoDiv);
         tr.appendChild(tdName);
         
         for (let s = 0; s < TOTAL_SLOTS; s++) {
@@ -294,6 +291,15 @@
           
           tr.appendChild(td);
         }
+        
+        const tdInfo = document.createElement('td');
+        tdInfo.className = 'shift-info-col';
+        tdInfo.style.fontSize = '0.75rem';
+        tdInfo.style.fontWeight = '500';
+        tdInfo.style.color = 'var(--text-muted)';
+        tdInfo.textContent = infoText;
+        tr.appendChild(tdInfo);
+        
         tbody.appendChild(tr);
       });
       
@@ -336,6 +342,7 @@
         }
         trReq.appendChild(td);
       }
+      trReq.appendChild(document.createElement('td')); // Empty cell for info column
       recordShortage(TOTAL_SLOTS);
       tbody.appendChild(trReq);
     }
