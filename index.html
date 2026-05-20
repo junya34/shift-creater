@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shift Creator Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="material-icons-round">calendar_month</span>
+        <h1>ShiftCreator</h1>
+      </div>
+      <nav class="nav-menu">
+        <button class="nav-item active" data-target="dashboard">
+          <span class="material-icons-round">dashboard</span>
+          Dashboard
+        </button>
+        <button class="nav-item" data-target="staff-portal">
+          <span class="material-icons-round">person</span>
+          Staff Portal
+        </button>
+        <button class="nav-item" data-target="manager-portal">
+          <span class="material-icons-round">admin_panel_settings</span>
+          Manager Portal
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <!-- Dashboard View -->
+      <section id="dashboard" class="view active">
+        <header class="view-header">
+          <h2>Dashboard</h2>
+          <p>シフト作成と管理の概要</p>
+        </header>
+        <div class="stats-grid">
+          <div class="stat-card glass">
+            <div class="stat-icon"><span class="material-icons-round">people</span></div>
+            <div class="stat-info">
+              <h3>登録スタッフ</h3>
+              <p id="dash-staff-count">0</p>
+            </div>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon"><span class="material-icons-round">assignment_turned_in</span></div>
+            <div class="stat-info">
+              <h3>希望提出済み</h3>
+              <p id="dash-submission-count">0</p>
+            </div>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon"><span class="material-icons-round">event_available</span></div>
+            <div class="stat-info">
+              <h3>シフト確定状況</h3>
+              <p id="dash-status">未確定</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Staff Portal View -->
+      <section id="staff-portal" class="view">
+        <header class="view-header">
+          <h2>Staff Portal</h2>
+          <p>シフト希望の提出</p>
+        </header>
+        <div class="portal-content">
+          <div class="staff-selector-card glass">
+            <label for="staff-select">スタッフを選択</label>
+            <div class="selector-group">
+              <select id="staff-select">
+                <option value="">-- 選択してください --</option>
+              </select>
+              <button id="btn-add-staff" class="btn btn-secondary"><span class="material-icons-round">person_add</span>新規登録</button>
+            </div>
+          </div>
+
+          <div id="availability-section" class="availability-card glass hidden">
+            <div class="card-header">
+              <h3>希望シフト入力</h3>
+              <div class="month-selector">
+                <button class="icon-btn" id="btn-prev-month"><span class="material-icons-round">chevron_left</span></button>
+                <span id="current-month-display">2026年5月</span>
+                <button class="icon-btn" id="btn-next-month"><span class="material-icons-round">chevron_right</span></button>
+              </div>
+            </div>
+            <p class="helper-text">勤務可能な時間帯を選択してください（15分単位）</p>
+            <div id="availability-calendar" class="calendar-grid">
+              <!-- Calendar days rendered by JS -->
+            </div>
+            <div class="actions">
+              <button id="btn-save-availability" class="btn btn-primary">希望を保存</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manager Portal View -->
+      <section id="manager-portal" class="view">
+        <header class="view-header">
+          <h2>Manager Portal</h2>
+          <p>シフト自動作成と管理</p>
+        </header>
+        <div class="portal-content">
+          <div class="tabs">
+            <button class="tab active" data-tab="requirements">必要オペ数設定</button>
+            <button class="tab" data-tab="shift-view">確定シフト表</button>
+          </div>
+
+          <div id="tab-requirements" class="tab-content active glass">
+            <div class="card-header">
+              <h3>1日の必要オペ数 (同時勤務人数)</h3>
+              <button id="btn-copy-reqs" class="btn btn-secondary">全日にコピー</button>
+            </div>
+            <div id="requirements-grid" class="requirements-grid">
+              <!-- Sliders or inputs for operations count rendered by JS -->
+            </div>
+            <div class="actions">
+              <button id="btn-generate-shift" class="btn btn-primary"><span class="material-icons-round">auto_awesome</span>シフトを自動生成</button>
+            </div>
+          </div>
+
+          <div id="tab-shift-view" class="tab-content glass">
+            <div class="card-header">
+              <h3>生成されたシフト表</h3>
+              <div class="legend">
+                <span class="legend-item"><span class="box work"></span>勤務</span>
+                <span class="legend-item"><span class="box break"></span>休憩</span>
+                <span class="legend-item"><span class="box warning"></span>要員不足</span>
+              </div>
+            </div>
+            <div id="shift-table-container" class="shift-table-wrapper">
+              <!-- Generated Shift Table rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal for adding staff -->
+    <div id="add-staff-modal" class="modal">
+      <div class="modal-content glass">
+        <h3>新規スタッフ登録</h3>
+        <div class="form-group">
+          <label for="new-staff-name">名前</label>
+          <input type="text" id="new-staff-name" placeholder="山田 太郎">
+        </div>
+        <div class="form-group">
+          <label for="new-staff-color">テーマカラー</label>
+          <input type="color" id="new-staff-color" value="#6366f1">
+        </div>
+        <div class="modal-actions">
+          <button id="btn-cancel-staff" class="btn btn-text">キャンセル</button>
+          <button id="btn-submit-staff" class="btn btn-primary">登録</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="js/store.js"></script>
+  <script type="module" src="js/scheduler.js"></script>
+  <script type="module" src="js/ui.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
