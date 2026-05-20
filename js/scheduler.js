@@ -86,18 +86,22 @@
               }
             }
             
-            // Case 2: With break (45 mins = 3 slots)
+            // Case 2: With break (>= 45 mins = >= 3 slots)
             // Break must start >= 8 slots (2h) after start, and end <= 4 slots (1h) before end
-            if (length >= 24 + 3 && length <= 32 + 3) {
-              for (let bStart = start + 8; bStart <= end - 4 - 3; bStart++) {
-                const bEnd = bStart + 3; // 3 slots break
-                const workSlots = length - 3;
-                
-                if (workSlots >= 24 && workSlots <= 32) {
-                  const score = evaluateShift(currentReqs, start, end, { bStart, bEnd });
-                  if (score > maxScore) {
-                    maxScore = score;
-                    bestShift = { start, end, breakStart: bStart, breakEnd: bEnd, workSlots };
+            if (length >= 15) { // 8 (before) + 3 (break) + 4 (after) = 15
+              for (let bStart = start + 8; bStart <= end - 7; bStart++) {
+                // Try break lengths from 3 slots (45 min) upwards
+                for (let bLen = 3; bStart + bLen <= end - 4; bLen++) {
+                  const bEnd = bStart + bLen;
+                  const workSlots = length - bLen;
+                  
+                  // Rule: Total work time cannot exceed 8 hours (32 slots)
+                  if (workSlots <= 32) {
+                    const score = evaluateShift(currentReqs, start, end, { bStart, bEnd });
+                    if (score > maxScore) {
+                      maxScore = score;
+                      bestShift = { start, end, breakStart: bStart, breakEnd: bEnd, workSlots };
+                    }
                   }
                 }
               }
