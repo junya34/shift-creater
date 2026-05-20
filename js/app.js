@@ -132,10 +132,11 @@
     document.getElementById('requirements-grid').addEventListener('change', (e) => {
       if (e.target.tagName === 'INPUT') {
         const container = e.target.closest('.req-time-blocks');
-        const dateStr = container.dataset.date;
+        const dayOfWeek = container.dataset.dayOfWeek;
+        const reqKey = `dow_${dayOfWeek}`;
         
-        if (!appData.requirements[dateStr]) {
-          appData.requirements[dateStr] = new Array(TOTAL_SLOTS).fill(0);
+        if (!appData.requirements[reqKey]) {
+          appData.requirements[reqKey] = new Array(TOTAL_SLOTS).fill(0);
         }
         
         const hourIndex = parseInt(e.target.dataset.hourIndex, 10);
@@ -143,30 +144,15 @@
         
         // Apply to all 4 slots of this hour
         for (let i = 0; i < 4; i++) {
-          appData.requirements[dateStr][hourIndex * 4 + i] = val;
+          appData.requirements[reqKey][hourIndex * 4 + i] = val;
         }
         saveData(appData);
       }
     });
-    
-    // Copy to all days
-    document.getElementById('btn-copy-reqs').addEventListener('click', () => {
-      const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-      const firstDayReqs = appData.requirements[`${currentYear}-${currentMonth.toString().padStart(2, '0')}-01`];
-      if (!firstDayReqs) return alert('1日の設定がありません。');
-      
-      for (let day = 2; day <= daysInMonth; day++) {
-        const dateStr = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-        appData.requirements[dateStr] = [...firstDayReqs];
-      }
-      saveData(appData);
-      handleManagerPortalTab();
-      alert('1日の設定を全日にコピーしました。');
-    });
 
     // Generate Shifts
-    document.getElementById('btn-generate-shift').addEventListener('click', () => {
-      const btn = document.getElementById('btn-generate-shift');
+    const doGenerateShifts = (btn) => {
+      const originalHTML = btn.innerHTML;
       btn.innerHTML = '<span class="material-icons-round">autorenew</span>生成中...';
       btn.disabled = true;
       
@@ -177,10 +163,28 @@
         
         // Switch to shift view tab
         document.querySelector('.tab[data-tab="shift-view"]').click();
-        btn.innerHTML = '<span class="material-icons-round">auto_awesome</span>シフトを自動生成';
+        btn.innerHTML = originalHTML;
         btn.disabled = false;
         updateDashboardStats(appData);
+        handleManagerPortalTab(); // refresh view if already on it
       }, 500); // Simulate processing time for UX
+    };
+
+    document.getElementById('btn-generate-shift').addEventListener('click', (e) => doGenerateShifts(e.currentTarget));
+    document.getElementById('btn-regenerate-shift').addEventListener('click', (e) => doGenerateShifts(e.currentTarget));
+    
+    document.getElementById('btn-clear-shift').addEventListener('click', () => {
+      if (confirm('この月のシフトをすべてクリアしますか？')) {
+        const yearMonth = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+        for (let key in appData.shifts) {
+          if (key.startsWith(yearMonth)) {
+            delete appData.shifts[key];
+          }
+        }
+        saveData(appData);
+        updateDashboardStats(appData);
+        handleManagerPortalTab();
+      }
     });
   }
 

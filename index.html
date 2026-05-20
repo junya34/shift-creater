@@ -114,8 +114,7 @@
 
           <div id="tab-requirements" class="tab-content active glass">
             <div class="card-header">
-              <h3>1日の必要オペ数 (同時勤務人数)</h3>
-              <button id="btn-copy-reqs" class="btn btn-secondary">全日にコピー</button>
+              <h3>曜日ごとの必要オペ数 (同時勤務人数)</h3>
             </div>
             <div id="requirements-grid" class="requirements-grid">
               <!-- Sliders or inputs for operations count rendered by JS -->
@@ -128,10 +127,14 @@
           <div id="tab-shift-view" class="tab-content glass">
             <div class="card-header">
               <h3>生成されたシフト表</h3>
-              <div class="legend">
-                <span class="legend-item"><span class="box work"></span>勤務</span>
-                <span class="legend-item"><span class="box break"></span>休憩</span>
-                <span class="legend-item"><span class="box warning"></span>要員不足</span>
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="legend">
+                  <span class="legend-item"><span class="box work"></span>勤務</span>
+                  <span class="legend-item"><span class="box break"></span>休憩</span>
+                  <span class="legend-item"><span class="box warning"></span>要員不足</span>
+                </div>
+                <button id="btn-regenerate-shift" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;"><span class="material-icons-round" style="font-size: 16px;">autorenew</span>再生成</button>
+                <button id="btn-clear-shift" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;"><span class="material-icons-round" style="font-size: 16px;">delete</span>クリア</button>
               </div>
             </div>
             <div id="shift-table-container" class="shift-table-wrapper">

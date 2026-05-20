@@ -24,7 +24,9 @@
 
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${yearMonth}-${day.toString().padStart(2, '0')}`;
-      const reqs = data.requirements[dateStr] || new Array(TOTAL_SLOTS).fill(0);
+      const dateObj = new Date(year, month - 1, day);
+      const reqKey = `dow_${dateObj.getDay()}`;
+      const reqs = data.requirements[reqKey] || new Array(TOTAL_SLOTS).fill(0);
       // Copy reqs to mutate
       const currentReqs = [...reqs];
       
@@ -41,8 +43,11 @@
         }
       });
       
-      // Sort staff by worked hours (ascending) to balance workload
-      availableStaff.sort((a, b) => a.worked - b.worked);
+      // Sort staff by worked hours (ascending) to balance workload. Add a slight random factor to provide variations on "Regenerate"
+      availableStaff.sort((a, b) => {
+        if (a.worked === b.worked) return Math.random() - 0.5;
+        return a.worked - b.worked;
+      });
       
       const dayShifts = [];
       

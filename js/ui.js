@@ -39,7 +39,7 @@
       
       const header = document.createElement('div');
       header.className = 'day-label';
-      header.innerHTML = `<span>${day}日 (${dayOfWeek})</span>`;
+      header.innerHTML = `<span>${month}月${day}日 (${dayOfWeek})</span>`;
       
       // Quick select buttons
       const quickSelect = document.createElement('div');
@@ -126,25 +126,23 @@
     const formatTime = window.Store.formatTime;
     
     container.innerHTML = '';
-    const daysInMonth = new Date(year, month, 0).getDate();
+    const dayNames = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
     
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-      const dateObj = new Date(year, month - 1, day);
-      const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][dateObj.getDay()];
-      const reqs = data.requirements[dateStr] || new Array(TOTAL_SLOTS).fill(0);
+    for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+      const reqKey = `dow_${dayOfWeek}`;
+      const reqs = data.requirements[reqKey] || new Array(TOTAL_SLOTS).fill(0);
       
       const block = document.createElement('div');
       block.className = 'req-day';
       
       const header = document.createElement('h4');
-      header.textContent = `${day}日 (${dayOfWeek})`;
+      header.textContent = dayNames[dayOfWeek];
       header.style.marginBottom = '8px';
       header.style.color = 'var(--primary)';
       
       const blocksContainer = document.createElement('div');
       blocksContainer.className = 'req-time-blocks';
-      blocksContainer.dataset.date = dateStr;
+      blocksContainer.dataset.dayOfWeek = dayOfWeek;
       
       // Group slots into hours for easier UI (4 slots = 1 hour)
       for (let h = 0; h < TOTAL_SLOTS / 4; h++) {
@@ -217,7 +215,7 @@
       const trDay = document.createElement('tr');
       const tdDay = document.createElement('td');
       tdDay.colSpan = TOTAL_SLOTS + 1;
-      tdDay.textContent = `${day}日 (${dayOfWeek})`;
+      tdDay.textContent = `${month}月${day}日 (${dayOfWeek})`;
       tdDay.style.background = 'rgba(99, 102, 241, 0.1)';
       tdDay.style.color = 'var(--primary)';
       tdDay.style.fontWeight = '700';
@@ -227,7 +225,8 @@
       
       // Calculate actual vs required
       const actualStaff = new Array(TOTAL_SLOTS).fill(0);
-      const reqs = data.requirements[dateStr] || new Array(TOTAL_SLOTS).fill(0);
+      const reqKey = `dow_${dateObj.getDay()}`;
+      const reqs = data.requirements[reqKey] || new Array(TOTAL_SLOTS).fill(0);
       
       dayShifts.forEach(shift => {
         const sinfo = data.staff.find(s => s.id === shift.staffId);
@@ -243,7 +242,27 @@
         dot.style.marginRight = '8px';
         
         tdName.appendChild(dot);
-        tdName.appendChild(document.createTextNode(sinfo ? sinfo.name : 'Unknown'));
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = sinfo ? sinfo.name : 'Unknown';
+        tdName.appendChild(nameSpan);
+        
+        const workSlots = shift.work[1] - shift.work[0];
+        const breakSlots = shift.break ? shift.break[1] - shift.break[0] : 0;
+        const actualWorkMins = (workSlots - breakSlots) * 15;
+        const breakMins = breakSlots * 15;
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.style.fontSize = '0.65rem';
+        infoDiv.style.color = 'var(--text-muted)';
+        infoDiv.style.marginTop = '4px';
+        
+        let infoText = `勤務: ${Math.floor(actualWorkMins / 60)}h${(actualWorkMins % 60) > 0 ? (actualWorkMins % 60) + 'm' : ''}`;
+        if (breakMins > 0) {
+          infoText += ` / 休憩: ${breakMins}m`;
+        }
+        infoDiv.textContent = infoText;
+        
+        tdName.appendChild(infoDiv);
         tr.appendChild(tdName);
         
         for (let s = 0; s < TOTAL_SLOTS; s++) {
