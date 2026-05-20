@@ -133,10 +133,21 @@
                   <span class="legend-item"><span class="box break"></span>休憩</span>
                   <span class="legend-item"><span class="box warning"></span>要員不足</span>
                 </div>
+                <button id="btn-print-pdf" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; background: var(--success); color: white;"><span class="material-icons-round" style="font-size: 16px;">picture_as_pdf</span>PDF出力</button>
                 <button id="btn-regenerate-shift" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;"><span class="material-icons-round" style="font-size: 16px;">autorenew</span>再生成</button>
                 <button id="btn-clear-shift" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;"><span class="material-icons-round" style="font-size: 16px;">delete</span>クリア</button>
               </div>
             </div>
+            
+            <div id="shortage-report-container" class="shortage-report" style="display: none; margin-bottom: 24px; padding: 16px; background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger); border-radius: 8px;">
+              <h4 style="color: var(--danger); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                <span class="material-icons-round" style="font-size: 20px;">warning</span>要員不足レポート
+              </h4>
+              <ul id="shortage-list" style="list-style: none; padding-left: 28px; font-size: 0.9rem; color: var(--text-main); max-height: 150px; overflow-y: auto;">
+                <!-- Shortage items -->
+              </ul>
+            </div>
+
             <div id="shift-table-container" class="shift-table-wrapper">
               <!-- Generated Shift Table rendered by JS -->
             </div>
