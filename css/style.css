@@ -583,12 +583,7 @@ select:focus, input[type="text"]:focus {
   color: white;
 }
 
-.shift-break {
-  background: var(--break-color);
-  opacity: 0.9;
-  border-radius: 2px;
-  color: white;
-}
+
 
 .req-row td {
   background: rgba(0, 0, 0, 0.02);
