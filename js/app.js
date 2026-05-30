@@ -38,13 +38,15 @@
 
   function setupEventListeners() {
     // Navigation
-    document.querySelectorAll('.nav-item').forEach(item => {
+    const navItems = document.querySelectorAll('.nav-item');
+    const views = document.querySelectorAll('.view');
+    navItems.forEach(item => {
       item.addEventListener('click', (e) => {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        navItems.forEach(n => n.classList.remove('active'));
         e.currentTarget.classList.add('active');
         
         const targetId = e.currentTarget.dataset.target;
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        views.forEach(v => v.classList.remove('active'));
         document.getElementById(targetId).classList.add('active');
         
         if (targetId === 'dashboard') updateDashboardStats(appData);
@@ -115,13 +117,15 @@
     });
 
     // Manager Portal
-    document.querySelectorAll('.tab').forEach(tab => {
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
       tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tabs.forEach(t => t.classList.remove('active'));
         e.currentTarget.classList.add('active');
         
         const targetTabId = e.currentTarget.dataset.tab;
-        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        tabContents.forEach(tc => tc.classList.remove('active'));
         document.getElementById(`tab-${targetTabId}`).classList.add('active');
         
         handleManagerPortalTab();

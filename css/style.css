@@ -583,7 +583,17 @@ select:focus, input[type="text"]:focus {
   color: white;
 }
 
-
+.shift-break {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(139, 92, 246, 0.2),
+    rgba(139, 92, 246, 0.2) 10px,
+    rgba(139, 92, 246, 0.4) 10px,
+    rgba(139, 92, 246, 0.4) 20px
+  );
+  opacity: 0.9;
+  border-radius: 2px;
+}
 
 .req-row td {
   background: rgba(0, 0, 0, 0.02);

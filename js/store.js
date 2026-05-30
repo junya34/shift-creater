@@ -32,13 +32,16 @@
     return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
   }
 
+  let cachedLabels = null;
   function generateSlotLabels() {
+    if (cachedLabels) return cachedLabels;
     const labels = [];
     for (let i = 0; i <= TOTAL_SLOTS; i++) {
       if (i % SLOTS_PER_HOUR === 0) {
         labels.push(TIME_START + i / SLOTS_PER_HOUR + ':00');
       }
     }
+    cachedLabels = labels;
     return labels;
   }
 

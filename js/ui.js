@@ -26,6 +26,7 @@
     container.innerHTML = '';
     const daysInMonth = new Date(year, month, 0).getDate();
     const labels = generateSlotLabels();
+    const fragment = document.createDocumentFragment();
     
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
@@ -112,8 +113,9 @@
       row.appendChild(header);
       row.appendChild(sliderContainer);
       row.appendChild(labelsDiv);
-      container.appendChild(row);
+      fragment.appendChild(row);
     }
+    container.appendChild(fragment);
   }
 
   function toggleSlot(slot, mode) {
@@ -127,6 +129,7 @@
     
     container.innerHTML = '';
     const dayNames = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
+    const fragment = document.createDocumentFragment();
     
     for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
       const reqKey = `dow_${dayOfWeek}`;
@@ -166,8 +169,9 @@
       
       block.appendChild(header);
       block.appendChild(blocksContainer);
-      container.appendChild(block);
+      fragment.appendChild(block);
     }
+    container.appendChild(fragment);
   }
 
   function renderShiftTable(container, year, month, data) {
